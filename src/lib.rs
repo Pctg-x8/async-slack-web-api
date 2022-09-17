@@ -72,6 +72,19 @@ pub mod api {
                 pub username: Option<&'s str>,
                 pub thread_ts: Option<&'s str>,
             }
+            impl Default for Request<'_> {
+                fn default() -> Self {
+                    Self {
+                        channel: "",
+                        text: None,
+                        as_user: None,
+                        icon_emoji: None,
+                        icon_url: None,
+                        username: None,
+                        thread_ts: None,
+                    }
+                }
+            }
 
             #[derive(serde::Deserialize)]
             pub struct Response {
