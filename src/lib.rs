@@ -81,11 +81,17 @@ pub mod api {
             #[derive(serde::Serialize)]
             pub struct Request<'s> {
                 pub channel: &'s str,
+                #[serde(skip_serializing_if = "Option::is_none")]
                 pub text: Option<&'s str>,
+                #[serde(skip_serializing_if = "Option::is_none")]
                 pub as_user: Option<bool>,
+                #[serde(skip_serializing_if = "Option::is_none")]
                 pub icon_emoji: Option<&'s str>,
+                #[serde(skip_serializing_if = "Option::is_none")]
                 pub icon_url: Option<&'s str>,
+                #[serde(skip_serializing_if = "Option::is_none")]
                 pub username: Option<&'s str>,
+                #[serde(skip_serializing_if = "Option::is_none")]
                 pub thread_ts: Option<&'s str>,
             }
             impl Default for Request<'_> {
