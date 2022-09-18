@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 pub struct PostAPI<Req, Resp>(&'static str, std::marker::PhantomData<(Req, Resp)>);
 impl<Req: serde::Serialize, Resp: serde::de::DeserializeOwned> PostAPI<Req, Resp> {
     pub const fn new(ep: &'static str) -> Self {
@@ -19,10 +21,18 @@ impl<Req: serde::Serialize, Resp: serde::de::DeserializeOwned> PostAPI<Req, Resp
 #[derive(serde::Deserialize, Debug)]
 pub struct GenericSlackError {
     pub error: String,
+    #[serde(flatten)]
+    pub extras: HashMap<String, serde_json::Value>,
 }
 impl std::fmt::Display for GenericSlackError {
     fn fmt(&self, fmt: &mut std::fmt::Formatter) -> std::fmt::Result {
-        fmt.write_str(&self.error)
+        write!(
+            fmt,
+            "SlackError: {} extras={}",
+            self.error,
+            serde_json::to_string(&self.extras)
+                .unwrap_or_else(|_| String::from("<ERROR FORMATTING>"))
+        )
     }
 }
 impl std::error::Error for GenericSlackError {}
