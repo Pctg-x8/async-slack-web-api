@@ -1,5 +1,8 @@
 use std::collections::HashMap;
 
+mod block;
+pub use self::block::*;
+
 pub struct PostAPI<Req, Resp>(&'static str, std::marker::PhantomData<(Req, Resp)>);
 impl<Req: serde::Serialize, Resp: serde::de::DeserializeOwned> PostAPI<Req, Resp> {
     pub const fn new(ep: &'static str) -> Self {
@@ -83,6 +86,9 @@ pub mod api {
                 pub channel: &'s str,
                 #[serde(skip_serializing_if = "Option::is_none")]
                 pub text: Option<&'s str>,
+                /// blocks[] as json string(serialize it yourself)
+                #[serde(skip_serializing_if = "Option::is_none")]
+                pub blocks: Option<&'s str>,
                 #[serde(skip_serializing_if = "Option::is_none")]
                 pub as_user: Option<bool>,
                 #[serde(skip_serializing_if = "Option::is_none")]
@@ -99,6 +105,7 @@ pub mod api {
                     Self {
                         channel: "",
                         text: None,
+                        blocks: None,
                         as_user: None,
                         icon_emoji: None,
                         icon_url: None,
