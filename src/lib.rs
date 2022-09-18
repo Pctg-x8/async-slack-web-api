@@ -29,19 +29,19 @@ impl<'de, T: serde::Deserialize<'de>> serde::Deserialize<'de> for GenericSlackRe
     {
         let mut obj = serde_json::Map::deserialize(deserializer)?;
 
-        let has_error = obj
+        let ok = obj
             .remove("ok")
             .ok_or_else(|| serde::de::Error::missing_field("ok"))?;
-        let has_error: bool = bool::deserialize(has_error).map_err(serde::de::Error::custom)?;
+        let ok: bool = bool::deserialize(ok).map_err(serde::de::Error::custom)?;
         let rest = serde_json::Value::Object(obj);
 
-        if has_error {
-            Ok(Self(Err(
-                GenericSlackError::deserialize(rest).map_err(serde::de::Error::custom)?
-            )))
-        } else {
+        if ok {
             Ok(Self(Ok(
                 T::deserialize(rest).map_err(serde::de::Error::custom)?
+            )))
+        } else {
+            Ok(Self(Err(
+                GenericSlackError::deserialize(rest).map_err(serde::de::Error::custom)?
             )))
         }
     }
