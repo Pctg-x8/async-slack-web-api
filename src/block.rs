@@ -11,6 +11,14 @@ pub enum Block<'s> {
         #[serde(skip_serializing_if = "Option::is_none")]
         block_id: Option<&'s str>,
     },
+    Section {
+        #[serde(skip_serializing_if = "Option::is_none")]
+        text: Option<TextObject<'s>>,
+        #[serde(skip_serializing_if = "Option::is_none")]
+        block_id: Option<&'s str>,
+        #[serde(skip_serializing_if = "Vec::is_empty")]
+        fields: Vec<TextObject<'s>>,
+    },
 }
 
 #[derive(serde::Serialize)]
