@@ -20,6 +20,12 @@ impl<Req: serde::Serialize, Resp: serde::de::DeserializeOwned> PostAPI<Req, Resp
 pub struct GenericSlackError {
     pub error: String,
 }
+impl std::fmt::Display for GenericSlackError {
+    fn fmt(&self, fmt: &mut std::fmt::Formatter) -> std::fmt::Result {
+        fmt.write_str(&self.error)
+    }
+}
+impl std::error::Error for GenericSlackError {}
 
 pub struct GenericSlackResult<T>(Result<T, GenericSlackError>);
 impl<'de, T: serde::Deserialize<'de>> serde::Deserialize<'de> for GenericSlackResult<T> {
